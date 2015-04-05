@@ -9,7 +9,6 @@ import time
 
 from fuse import FUSE, FuseOSError, Operations
 
-
 class PassthroughFiltered(Operations):
     """
     Make a read-only alias of another directory, filtering entities by
