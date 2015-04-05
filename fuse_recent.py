@@ -5,6 +5,7 @@ from __future__ import with_statement
 import os
 import sys
 import errno
+import time
 
 from fuse import FUSE, FuseOSError, Operations
 
@@ -95,17 +96,21 @@ class PassthroughFiltered(Operations):
     def release(self, path, fh):
         return os.close(fh)
 
-class NoCaps(PassthroughFiltered):
+class OnlyNew(PassthroughFiltered):
     """
-    Only show lowercase files from source directory.
+    Only show items that are 2 weeks old or newer.
     """
     def is_visible(self, path):
         """Should the file from the first directory show up in the second one?"""
-        _, fname = os.path.split(path)
-        return fname.lower() == fname
+        st = os.lstat(path)
+        minute = 60
+        hour = minute * 60
+        day = hour * 24
+        week = day * 7
+        return time.time() - st.st_ctime < week * 2
 
 def main(mountpoint, root):
-    FUSE(NoCaps(root), mountpoint, foreground=True)
+    FUSE(OnlyNew(root), mountpoint, foreground=True)
 
 if __name__ == '__main__':
     main(sys.argv[2], sys.argv[1])
