@@ -1,0 +1,4 @@
+* /etc/ error:
+    * http://blog.tordeu.com/?p=50
+* fuse on init:
+    * http://stackoverflow.com/questions/1554178/how-to-register-fuse-filesystem-type-with-mount8-and-fstab
